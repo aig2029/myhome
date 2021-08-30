@@ -40,50 +40,30 @@
 <main class="container">
   <div class="bg-light p-5 rounded">
     <h1>게시판</h1>
-    <div>총 건수 : <span th:text="${boards.totalElements}"></span></div>
-    <form class="d-flex justify-content-end" method="get" th:action="@{/board/list}">
-      <div class="col-auto">
-        <label for="searchText" class="visually-hidden">검색</label>
-        <input type="text" class="form-control" id="searchText" name="searchText" th:value="${param.searchText}">
+    <form action="#" th:action="@{/board/form}" th:object="${board}" method="post">
+      <input type="hidden" th:field="*{id}">
+      <div class="mb-3">
+        <label for="title" class="form-label">제목</label>
+        <input type="text" class="form-control" id="title" th:field="*{title}"
+               th:classappend="${#fields.hasErrors('title')} ? 'is-invalid'">
+        <div class="invalid-feedback" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">
+          제목 에러 메시지
+        </div>
       </div>
-      <div class="col-auto">
-        <button type="submit" class="btn btn-secondary mb-3">검색</button>
+      <div class="mb-3">
+        <label for="content" class="form-label">내용</label>
+        <textarea class="form-control" id="content" rows="3" th:field="*{content}"
+                  th:classappend="${#fields.hasErrors('content')} ? 'is-invalid'"></textarea>
+        <div class="invalid-feedback" th:if="${#fields.hasErrors('content')}" th:errors="*{content}">
+          제목 에러 메시지
+        </div>
+      </div>
+      <div class="text-end">
+        <a type="button" class="btn btn-primary" th:href="@{/board/list}">취소</a>
+        <button type="submit" class="btn btn-primary">확인</button>
       </div>
     </form>
-    <table class="table">
-      <thead class="thead-dark">
-      <tr>
-        <th scope="col">번호</th>
-        <th scope="col">제목</th>
-        <th scope="col">내용</th>
-        <th scope="col">작성자</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr th:each="board : ${boards}">
-        <th th:text="${board.id}">1</th>
-        <td ><a th:text="${board.title}" th:href="@{/board/form(id=${board.id}) }">Mark</a></td>
-        <td th:text="${board.content}">@mdo</td>
-        <td th:text="${board.user.username}">홍길동</td>
-      </tr>
-      </tbody>
-    </table>
-    <nav aria-label="Page navigation example">
-      <ul class="pagination justify-content-center">
-        <li class="page-item" th:classappend="${1==boards.pageable.pageNumber+1}? 'disabled'">
-          <a class="page-link" th:href="@{/board/list(page=${boards.pageable.pageNumber-1}, searchText=${param.searchText} )}" tabindex="-1" aria-disabled="true">Previous</a>
-        </li>
-        <li class="page-item" th:classappend="${i==boards.pageable.pageNumber+1}? 'disabled'" th:each="i: ${#numbers.sequence(startPage,endPage)}">
-          <a class="page-link" th:href="@{/board/list(page=${i-1}, searchText=${param.searchText})}" th:text="${i}">1</a>
-        </li>
-        <li class="page-item" th:classappend="${boards.getTotalPages()==boards.pageable.pageNumber+1}? 'disabled'">
-          <a class="page-link" th:href="@{/board/list(page=${boards.pageable.pageNumber+1}, searchText=${param.searchText})}">Next</a>
-        </li>
-      </ul>
-    </nav>
-    <div class="text-end">
-      <a type="button" class="btn btn-primary" th:href="@{/board/form}">쓰기</a>
-    </div>
+
 <!--    <a class="btn btn-lg btn-primary" href="/docs/5.1/components/navbar/" role="button">View navbar docs &raquo;</a>-->
   </div>
 </main>
